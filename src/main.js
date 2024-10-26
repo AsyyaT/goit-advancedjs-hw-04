@@ -44,6 +44,7 @@ const submitHandler = async event => {
     const { data } = await getPhotos(query, currPage);
 
     if (data.total === 0) {
+      hideLoadMoreButton()
       throw new Error(
         'Sorry, there are no images matching your search query. Please try again!'
       );
