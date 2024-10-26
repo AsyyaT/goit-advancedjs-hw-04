@@ -1,19 +1,41 @@
-export function renderImages(images) {
-    const gallery = document.querySelector('.gallery');
-    const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
-        <li><a href="${largeImageURL}" class="gallery-item" data-lightbox="image">
-            <div class="image-container"><img src="${webformatURL}" alt="${tags}" loading="lazy" /></div>
-            <div class="card-description">
-                <p class="info"><span>Likes</span> ${likes}</p>
-                <p class="info"><span>Views</span> ${views}</p>
-                <p class="info"><span>Comments</span> ${comments}</p>
-                <p class="info"><span>Downloads</span> ${downloads}</p>
-            </div>
-        </a></li>
-    `).join('');
+const gallery = document.querySelector('.gallery');
 
-    gallery.insertAdjacentHTML('beforeend', `<ul class="gallery-list">${markup}</ul>`)
-}
+const createImageCard = ({
+  webformatURL,
+  largeImageURL,
+  tags,
+  likes,
+  views,
+  comments,
+  downloads,
+}) => `
+<li>
+  <a href="${largeImageURL}">
+    <div class="image-container">
+      <img class="image-preview" src="${webformatURL}" alt="${tags}" />
+    </div>
+    <div class="card-description">
+      <span class="attribute"><span>Likes</span> ${likes}</span>
+      <span class="attribute"><span>Views</span> ${views}</span>
+      <span class="attribute"><span>Comments</span> ${comments}</span>
+      <span class="attribute"><span>Downloads</span> ${downloads}</span>
+    </div>
+  </a>
+</li>
+  `;
+
+export const renderImages = images => {
+  const cards = images.map(createImageCard).join('');
+
+  gallery.innerHTML = `<ul class="gallery-list">${cards}</ul>`;
+};
+
+export const addImages = images => {
+  const cards = images.map(createImageCard).join('');
+  const galleryList = document.querySelector('.gallery-list');
+
+  galleryList.insertAdjacentHTML('beforeend', cards);
+};
 
 export const showLoadMoreButton = () => {
   const loadMoreBtn = document.querySelector('.load-more');
@@ -26,10 +48,5 @@ export const hideLoadMoreButton = () => {
 };
 
 export const clearGallery = () => {
-  const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
-};
-
-export const renderError = () => {
   gallery.innerHTML = '';
 };

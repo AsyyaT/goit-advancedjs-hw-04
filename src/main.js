@@ -1,9 +1,9 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import { getPhotos, incrementPage } from './js/pixabay-api';
+import getPhotos from './js/pixabay-api.js';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import { renderImages, clearGallery, showLoadMoreButton, hideLoadMoreButton } from './js/render-functions.js';
+import { renderImages, clearGallery, showLoadMoreButton, hideLoadMoreButton, addImages } from './js/render-functions.js';
 
 
 const simpleGallery = new SimpleLightbox('.gallery a', {
@@ -22,16 +22,16 @@ const searchForm = document.querySelector('.search-form');
 const loadMoreBtn = document.querySelector('.load-more');
 const loader = document.querySelector('#loader');
 
-const submitHandler = async e => {
-  e.preventDefault();
+const submitHandler = async event => {
+  event.preventDefault();
 
-  const form = e.target;
+  const form = event.target;
   const sumbittedQuery = form.elements.query.value.trim();
 
   if (!sumbittedQuery) {
     return;
   } else if (query === sumbittedQuery) {
-    incrementPage();
+    page += 1;
   } else {
     query = sumbittedQuery;
     currPage = 1;
@@ -83,7 +83,7 @@ const loadMoreHandler = async () => {
   try {
     const { data } = await getPhotos(query, currPage);
 
-    renderImages(data.hits);
+    addImages(data.hits);
     if (data.totalHits <= 15 * currPage) {
       hideLoadMoreButton();
       iziToast.info({
